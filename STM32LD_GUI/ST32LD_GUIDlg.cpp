@@ -258,6 +258,10 @@ void CST32LD_GUIDlg::COM_Update( void )
 	ser_handler hPort;
 	CString str;
 
+
+	stm32_close();
+
+
 	//-- COM ¸®½ºÆ® Clear
 	list_cnt = m_comboCOM.GetCount();
 
