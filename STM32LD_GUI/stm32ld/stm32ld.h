@@ -43,6 +43,7 @@ typedef void ( *p_progress )( u32 wrote );
 
 // Loader functions
 int stm32_init( const char* portname, u32 baud );
+int stm32_go_boot( const char *portname, u32 baud );
 int stm32_get_bl_version( u8 *major, u8 *minor ); 
 int stm32_get_chip_id( u16 *version );
 int stm32_write_unprotect();

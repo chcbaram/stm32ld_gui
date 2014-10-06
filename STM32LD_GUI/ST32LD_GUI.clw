@@ -30,7 +30,7 @@ ImplementationFile=ST32LD_GUIDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=CST32LD_GUIDlg
+LastObject=IDC_CHECK_AUTO_BOOT
 
 [CLS:CAboutDlg]
 Type=0
@@ -50,7 +50,7 @@ Control4=IDOK,button,1342373889
 [DLG:IDD_ST32LD_GUI_DIALOG]
 Type=1
 Class=CST32LD_GUIDlg
-ControlCount=8
+ControlCount=9
 Control1=IDC_LIST_DEBUG,SysListView32,1350631425
 Control2=IDC_STATIC,button,1342177287
 Control3=IDC_COMBO_COMPORT,combobox,1344339970
@@ -59,4 +59,5 @@ Control5=IDC_STATIC,button,1342177287
 Control6=IDC_BUTTON_UPDATE,button,1342242816
 Control7=IDC_BUTTON_DOWN_BOOT,button,1342242816
 Control8=IDC_BUTTON_DOWN_FIRM,button,1342242816
+Control9=IDC_CHECK_AUTO_BOOT,button,1342242819
 

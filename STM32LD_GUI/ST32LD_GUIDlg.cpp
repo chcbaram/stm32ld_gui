@@ -134,6 +134,8 @@ BOOL CST32LD_GUIDlg::OnInitDialog()
 
 	pDlg = this;
 
+	((CButton *)GetDlgItem(IDC_CHECK_AUTO_BOOT))->SetCheck(TRUE);
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -450,6 +452,16 @@ void CST32LD_GUIDlg::Download_Exe()
 	
 	//dbg_printf("port : %s\n", com_str);
 
+
+	if( ((CButton *)GetDlgItem(IDC_CHECK_AUTO_BOOT))->GetCheck() == TRUE )
+	{
+		dbg_printf( "Go to bootloader\n" );
+		//-- 부트로더 실행 
+		//
+		stm32_go_boot( com_str, baud );
+	}
+
+
 	if( stm32_init( com_str, baud ) != STM32_OK )
 	{
 		dbg_printf( "ERROR :Unable to connect to bootloader\n" );
@@ -588,6 +600,8 @@ UINT CST32LD_GUIDlg::Download_Thread(LPVOID pParam)
  
 		Dlg->Download_Exe();
        
+		stm32_close();
+
 		Dlg->Button_Status(TRUE);
 
         return 0;

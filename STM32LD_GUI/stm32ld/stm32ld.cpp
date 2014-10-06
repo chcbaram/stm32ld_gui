@@ -109,6 +109,28 @@ int stm32_init( const char *portname, u32 baud )
   return stm32h_connect_to_bl();
 }
 
+int stm32_go_boot( const char *portname, u32 baud )
+{
+  // Open port
+  if( ( stm32_ser_id = ser_open( portname ) ) == ( ser_handler )-1 )
+    return STM32_PORT_OPEN_ERROR;
+
+  // Setup port
+  ser_setup( stm32_ser_id, baud, SER_DATABITS_8, SER_PARITY_EVEN, SER_STOPBITS_1 );
+
+  ser_write_byte( stm32_ser_id, 'z' );
+  stm32_close();
+  
+  #ifdef WIN32_BUILD
+  Sleep( 5000 );
+  #else
+  usleep( 5000*1000 );
+  #endif
+
+  
+  return 1;
+}
+
 // Get bootloader version
 // Expected response: ACK version OPTION1 OPTION2 ACK
 int stm32_get_version( u8 *major, u8 *minor )
