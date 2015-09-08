@@ -26,6 +26,7 @@
 
 #define BOOT_DOWNLOAD	0
 #define FIRM_DOWNLOAD	1
+#define WRITE_UNPROTECT 2
 
 
 
@@ -95,6 +96,7 @@ protected:
 	afx_msg void OnButtonDownBoot();
 	afx_msg void OnButtonDownFirm();
 	afx_msg void OnButtonUpdate();
+	afx_msg void OnButtonWriteUnprotect();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

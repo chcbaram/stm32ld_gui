@@ -14,6 +14,7 @@
 #define IDC_BUTTON_DOWN_BOOT            1005
 #define IDC_BUTTON_DOWN_FIRM            1006
 #define IDC_CHECK_AUTO_BOOT             1007
+#define IDC_BUTTON_WRITE_UNPROTECT      1008
 
 // Next default values for new objects
 // 

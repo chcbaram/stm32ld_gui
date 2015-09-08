@@ -92,6 +92,7 @@ BEGIN_MESSAGE_MAP(CST32LD_GUIDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_DOWN_BOOT, OnButtonDownBoot)
 	ON_BN_CLICKED(IDC_BUTTON_DOWN_FIRM, OnButtonDownFirm)
 	ON_BN_CLICKED(IDC_BUTTON_UPDATE, OnButtonUpdate)
+	ON_BN_CLICKED(IDC_BUTTON_WRITE_UNPROTECT, OnButtonWriteUnprotect)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -134,7 +135,7 @@ BOOL CST32LD_GUIDlg::OnInitDialog()
 
 	pDlg = this;
 
-	((CButton *)GetDlgItem(IDC_CHECK_AUTO_BOOT))->SetCheck(TRUE);
+	((CButton *)GetDlgItem(IDC_CHECK_AUTO_BOOT))->SetCheck(FALSE);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -330,11 +331,13 @@ void CST32LD_GUIDlg::Button_Status( BOOL Mode )
 	{
 		((CButton *)GetDlgItem(IDC_BUTTON_DOWN_BOOT))->EnableWindow(TRUE);
 		((CButton *)GetDlgItem(IDC_BUTTON_DOWN_FIRM))->EnableWindow(TRUE);
+		((CButton *)GetDlgItem(IDC_BUTTON_WRITE_UNPROTECT))->EnableWindow(TRUE);
 	}
 	else
 	{
 		((CButton *)GetDlgItem(IDC_BUTTON_DOWN_BOOT))->EnableWindow(FALSE);
 		((CButton *)GetDlgItem(IDC_BUTTON_DOWN_FIRM))->EnableWindow(FALSE);
+		((CButton *)GetDlgItem(IDC_BUTTON_WRITE_UNPROTECT))->EnableWindow(FALSE);
 	}
 }
 
@@ -375,12 +378,14 @@ void CST32LD_GUIDlg::Download_Exe()
 	u8 not_flashing    = 0;
 	u8 send_go_command = 0;
 	u8 boot_mode       = 0;
+	u8 load_bin		   = 1;
 	u8 minor, major;
 	u16 version;
 	long baud = 115200;
 	
 	char com_str[1024];
 	CString str;
+	int ErrCode;
 
 	dbg_printf("stm32ld ver 1.0.1\n");
 
@@ -402,45 +407,55 @@ void CST32LD_GUIDlg::Download_Exe()
 		dbg_printf("--- Bootloader Download Mode --- ");
 	}
 	else
+	if( Download_Mode == FIRM_DOWNLOAD )
 	{
 		boot_mode       = 1;
 		send_go_command = 1;
 		dbg_printf("--- Firmware Download Mode --- ");
 	}
-
-
-	//-- Bin 파일 이름 읽기 
-	//
-	if( GetFileName() == FALSE )
-	{
-		dbg_printf("ERROR : GetFileName Failed");
-	}
 	else
 	{
-		dbg_printf("Download File : %s",file_str);
+		load_bin        = 0;
+		boot_mode       = 0;
+		send_go_command = 0;
+		dbg_printf("--- Write Unprotect Mode --- ");
 	}
 
-
-	//-- Bin 파일 Open
-	//
-	if( fp != NULL ) 
+	if( load_bin == 1 )
 	{
-		fclose(fp);
-	}
+		//-- Bin 파일 이름 읽기 
+		//
+		if( GetFileName() == FALSE )
+		{
+			dbg_printf("ERROR : GetFileName Failed");
+		}
+		else
+		{
+			dbg_printf("Download File : %s",file_str);
+		}
 
-	if( ( fp = fopen( file_str, "rb" ) ) == NULL )
-    {
-		dbg_printf( "Unable to open %s\n", file_str );
-		return;
-    }
-    else
-    {
-		fseek( fp, 0, SEEK_END );
-		fpsize = ftell( fp );
-		fseek( fp, 0, SEEK_SET );
-	}
 
-	dbg_printf( "File Size : %d KB\n", fpsize/1024 );
+		//-- Bin 파일 Open
+		//
+		if( fp != NULL ) 
+		{
+			fclose(fp);
+		}
+
+		if( ( fp = fopen( file_str, "rb" ) ) == NULL )
+		{
+			dbg_printf( "Unable to open %s\n", file_str );
+			return;
+		}
+		else
+		{
+			fseek( fp, 0, SEEK_END );
+			fpsize = ftell( fp );
+			fseek( fp, 0, SEEK_SET );
+		}
+
+		dbg_printf( "File Size : %d KB\n", fpsize/1024 );
+	}
 
 
 	//-- Connect to bootloader
@@ -465,7 +480,10 @@ void CST32LD_GUIDlg::Download_Exe()
 	if( stm32_init( com_str, baud ) != STM32_OK )
 	{
 		dbg_printf( "ERROR :Unable to connect to bootloader\n" );
-		fclose(fp);
+		if( load_bin == 1 )
+		{
+			fclose(fp);
+		}
 		return;
 	}
 
@@ -526,16 +544,24 @@ void CST32LD_GUIDlg::Download_Exe()
   
 	// Write unprotect
 	//
-	/*
-    if( stm32_write_unprotect() != STM32_OK )
-    {
-      fprintf( stderr, "Unable to execute write unprotect\n" );
-      exit( 1 );
+	
+	if( Download_Mode == WRITE_UNPROTECT )
+	{
+		if( stm32_write_unprotect() != STM32_OK )
+		{
+		  dbg_printf( "Unable to execute write unprotect\n" );
+		  return;
+		}
+		else
+		{
+		  dbg_printf( "Cleared write protection.\n" );
+		  dbg_printf( "Reset and Run BootLoader.\n" );
+		}
+
+		return;
     }
-    else
-      printf( "Cleared write protection.\n" );
-    */
     
+
 
     // Erase flash
     //
@@ -552,13 +578,15 @@ void CST32LD_GUIDlg::Download_Exe()
     }
     else
     {
-      if( stm32_erase_flash() != STM32_OK )
-      {
-        dbg_printf( "ERROR :Unable to erase chip\n" );
-        return;
-      }
-      else
-        dbg_printf( "Erased FLASH memory.\n" );
+		ErrCode = stm32_erase_flash();
+		if( ErrCode != STM32_OK )
+		{
+			str.Format("ERROR :Unable to erase chip : %d\n", ErrCode );
+			dbg_printf((char *)str.GetBuffer(0));
+			return;
+		}
+		else
+			dbg_printf( "Erased FLASH memory.\n" );
     }
 
 
@@ -635,4 +663,14 @@ void CST32LD_GUIDlg::OnButtonUpdate()
 	// TODO: Add your control notification handler code here
 
 	COM_Update();
+}
+
+void CST32LD_GUIDlg::OnButtonWriteUnprotect() 
+{
+	// TODO: Add your control notification handler code here
+	Download_Mode = WRITE_UNPROTECT;
+
+	Button_Status(FALSE);
+
+	AfxBeginThread(Download_Thread,this);	
 }
