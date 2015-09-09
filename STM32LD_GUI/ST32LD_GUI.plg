@@ -6,15 +6,30 @@
 --------------------Configuration: ST32LD_GUI - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSPEAEE.tmp" with contents
+Creating command line "rc.exe /l 0x412 /fo"Release/ST32LD_GUI.res" /d "NDEBUG" "C:\D\git\stm32ld_gui\STM32LD_GUI\ST32LD_GUI.rc"" 
+Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSP92C7.tmp" with contents
 [
 /nologo /MT /W3 /GX /O2 /I "./stm32ld" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "WIN32_BUILD" /FR"Release/" /Fp"Release/ST32LD_GUI.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\D\git\stm32ld_gui\STM32LD_GUI\ST32LD_GUI.cpp"
 "C:\D\git\stm32ld_gui\STM32LD_GUI\ST32LD_GUIDlg.cpp"
 ]
-Creating command line "cl.exe @C:\Users\Baram\AppData\Local\Temp\RSPEAEE.tmp" 
-Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSPEAEF.tmp" with contents
+Creating command line "cl.exe @C:\Users\Baram\AppData\Local\Temp\RSP92C7.tmp" 
+Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSP92C8.tmp" with contents
 [
-/nologo /subsystem:windows /incremental:no /pdb:"Release/STM32LD_GUI_V0.0.3.pdb" /machine:I386 /out:"Release/STM32LD_GUI_V0.0.3.exe" 
+/nologo /MT /W3 /GX /O2 /I "./stm32ld" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "WIN32_BUILD" /FR"Release/" /Fp"Release/ST32LD_GUI.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\D\git\stm32ld_gui\STM32LD_GUI\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\Baram\AppData\Local\Temp\RSP92C8.tmp" 
+Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSP92C9.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "./stm32ld" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "WIN32_BUILD" /FR"Release/" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\D\git\stm32ld_gui\STM32LD_GUI\stm32ld\serial_win32.cpp"
+"C:\D\git\stm32ld_gui\STM32LD_GUI\stm32ld\stm32ld.cpp"
+]
+Creating command line "cl.exe @C:\Users\Baram\AppData\Local\Temp\RSP92C9.tmp" 
+Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSP92CA.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Release/STM32LD_GUI_V0.0.4.pdb" /machine:I386 /out:"Release/STM32LD_GUI_V0.0.4.exe" 
 .\Release\ST32LD_GUI.obj
 .\Release\ST32LD_GUIDlg.obj
 .\Release\StdAfx.obj
@@ -22,12 +37,22 @@ Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSPEAEF.tmp" with con
 .\Release\stm32ld.obj
 .\Release\ST32LD_GUI.res
 ]
-Creating command line "link.exe @C:\Users\Baram\AppData\Local\Temp\RSPEAEF.tmp"
+Creating command line "link.exe @C:\Users\Baram\AppData\Local\Temp\RSP92CA.tmp"
 <h3>Output Window</h3>
+Compiling resources...
 Compiling...
+StdAfx.cpp
+Compiling...
+ST32LD_GUI.cpp
 ST32LD_GUIDlg.cpp
 C:\D\git\stm32ld_gui\STM32LD_GUI\ST32LD_GUIDlg.cpp(249) : warning C4018: '>=' : signed/unsigned mismatch
 C:\D\git\stm32ld_gui\STM32LD_GUI\ST32LD_GUIDlg.cpp(349) : warning C4101: 'str' : unreferenced local variable
+Generating Code...
+Compiling...
+serial_win32.cpp
+stm32ld.cpp
+C:\D\git\stm32ld_gui\STM32LD_GUI\stm32ld\stm32ld.cpp(161) : warning C4101: 'temp' : unreferenced local variable
+Generating Code...
 Linking...
 LINK : warning LNK4089: all references to "SHELL32.dll" discarded by /OPT:REF
 Creating command line "bscmake.exe /nologo /o"Release/ST32LD_GUI.bsc"  .\Release\StdAfx.sbr .\Release\ST32LD_GUI.sbr .\Release\ST32LD_GUIDlg.sbr .\Release\serial_win32.sbr .\Release\stm32ld.sbr"
@@ -37,7 +62,7 @@ Creating browse info file...
 
 
 <h3>Results</h3>
-STM32LD_GUI_V0.0.3.exe - 0 error(s), 3 warning(s)
+STM32LD_GUI_V0.0.4.exe - 0 error(s), 4 warning(s)
 </pre>
 </body>
 </html>

@@ -178,7 +178,7 @@ int stm32_write_unprotect()
   STM32_CHECK_INIT;
   stm32h_send_command( STM32_CMD_WRITE_UNPROTECT );
   STM32_EXPECT( STM32_COMM_ACK );
-  Sleep(1000);
+  Sleep(6000);
   STM32_EXPECT( STM32_COMM_ACK );
   // At this point the system got a reset, so we need to re-enter BL mode
   #ifdef WIN32_BUILD
