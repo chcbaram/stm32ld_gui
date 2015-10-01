@@ -87,7 +87,7 @@ END
 IDD_ST32LD_GUI_DIALOG DIALOGEX 0, 0, 319, 229
 STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "STM32LD_GUI V0.0.4"
+CAPTION "STM32LD_GUI V0.0.5"
 FONT 9, "±¼¸²"
 BEGIN
     CONTROL         "List2",IDC_LIST_DEBUG,"SysListView32",LVS_REPORT | 
@@ -101,10 +101,13 @@ BEGIN
     PUSHBUTTON      "BootLoader",IDC_BUTTON_DOWN_BOOT,162,20,60,13
     PUSHBUTTON      "Firmware",IDC_BUTTON_DOWN_FIRM,246,20,60,13
     CONTROL         "Auto",IDC_CHECK_AUTO_BOOT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,279,58,30,10
+                    NOT WS_VISIBLE | WS_TABSTOP,279,58,30,10
     GROUPBOX        "Option",IDC_STATIC,155,43,157,33
     PUSHBUTTON      "Write Unprotect",IDC_BUTTON_WRITE_UNPROTECT,161,57,60,
                     13
+    GROUPBOX        "Board",IDC_STATIC,7,43,140,34
+    COMBOBOX        IDC_COMBO_BOARD,13,56,78,162,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
 END
 
 
@@ -176,6 +179,21 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_ST32LD_GUI_DIALOG DLGINIT
+BEGIN
+    IDC_COMBO_BOARD, 0x403, 15, 0
+0x6b53, 0x5279, 0x766f, 0x7265, 0x4e20, 0x6e61, 0x316f, "\000" 
+    IDC_COMBO_BOARD, 0x403, 9, 0
+0x7543, 0x4470, 0x6f72, 0x656e, "\000" 
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

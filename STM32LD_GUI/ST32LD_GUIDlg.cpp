@@ -77,6 +77,7 @@ void CST32LD_GUIDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CST32LD_GUIDlg)
+	DDX_Control(pDX, IDC_COMBO_BOARD, m_ctrlBoard);
 	DDX_Control(pDX, IDC_COMBO_COMPORT, m_comboCOM);
 	DDX_Control(pDX, IDC_LIST_DEBUG, m_listLog);
 	//}}AFX_DATA_MAP
@@ -132,6 +133,12 @@ BOOL CST32LD_GUIDlg::OnInitDialog()
 	fp = NULL;
 	UART_Opened = FALSE;
 	FILE_Opened = FALSE;
+
+	
+	m_ctrlBoard.SetCurSel(0);
+
+
+	//m_comboCOM.GetCurSel();
 
 	pDlg = this;
 
@@ -622,6 +629,172 @@ void CST32LD_GUIDlg::Download_Exe()
 	Print_Log("다운로드 성공");
 }
 
+
+void CST32LD_GUIDlg::Download_Exe_OpenCM() 
+{
+
+	u8 not_flashing    = 0;
+	u8 send_go_command = 0;
+	u8 boot_mode       = 0;
+	u8 load_bin		   = 1;
+	u8 minor, major;
+	u16 version;
+	u16 i;
+	int Ret;
+	char RecvStr[100];	
+
+	long baud = 115200;
+	
+	char com_str[1024];
+	CString str;
+	int ErrCode;
+
+	dbg_printf("stm32ld ver 1.0.1 for CupDrone\n");
+
+
+	if( UART_Opened != TRUE )
+	{
+		dbg_printf("ERROR : COM Port is not selected\n");
+		MessageBox("Please Update COM and Select COM Port");
+		return;
+	}
+
+
+	dbg_printf(" ");
+
+	if( Download_Mode == FIRM_DOWNLOAD )
+	{
+		boot_mode       = 1;
+		send_go_command = 1;
+		dbg_printf("--- CupDrone Firmware Download Mode --- ");
+	}
+	else
+	{
+		load_bin        = 0;
+		boot_mode       = 0;
+		send_go_command = 0;
+		dbg_printf("--- Mode Error --- ");
+		return;
+	}
+
+	if( load_bin == 1 )
+	{
+		//-- Bin 파일 이름 읽기 
+		//
+		if( GetFileName() == FALSE )
+		{
+			dbg_printf("ERROR : GetFileName Failed");
+		}
+		else
+		{
+			dbg_printf("Download File : %s",file_str);
+		}
+
+
+		//-- Bin 파일 Open
+		//
+		if( fp != NULL ) 
+		{
+			fclose(fp);
+		}
+
+		if( ( fp = fopen( file_str, "rb" ) ) == NULL )
+		{
+			dbg_printf( "Unable to open %s\n", file_str );
+			return;
+		}
+		else
+		{
+			fseek( fp, 0, SEEK_END );
+			fpsize = ftell( fp );
+			fseek( fp, 0, SEEK_SET );
+		}
+
+		dbg_printf( "File Size : %d KB\n", fpsize/1024 );
+	}
+
+
+	//-- Connect to bootloader
+	//
+	stm32_close();
+
+	m_comboCOM.GetWindowText(str);
+	sscanf( str, "%s", com_str );
+	
+	dbg_printf("port : %s\n", com_str);
+
+
+	Ret = OpenCM_Cmd_Init( com_str, baud );
+	if( Ret != STM32_OK )
+	{
+		str.Format("ERROR :Unable to connect to bootloader : %d\n", Ret );
+		dbg_printf( str.GetBuffer(0) );
+		if( load_bin == 1 )
+		{
+			fclose(fp);
+		}
+		return;
+	}
+
+	dbg_printf( "OpenCM_Cmd_Init : OK\n" );
+
+
+		for( i=0; i<5; i++ )
+		{
+	  		if( OpenCM_Cmd_SendCmdRecvResponse("AT&LD", RecvStr, 5000 ) == TRUE )
+	  		{
+	  			dbg_printf("Ready To download \n");
+	  			OpenCM_Wait_ms(5);
+	
+	  			if( OpenCM_WriteFlash( writeh_read_data, writeh_progress ) != TRUE )
+	    		{
+					fprintf( stderr, "Unable to program FLASH memory.\n" );
+					exit( 1 );
+				}
+				else
+				{
+					//printf("\nFlash OK\n");
+					OpenCM_Wait_ms(50);
+	
+					RecvStr[0] = 0;
+					OpenCM_Cmd_ReadResponse( RecvStr, 500 );
+					dbg_printf("CheckSum : %s\n", RecvStr);
+	
+					if( strncmp(RecvStr, "Success", 7) == 0 )
+					{
+						if( send_go_command == 1 )
+						{
+							OpenCM_Wait_ms(200);
+							dbg_printf("Go Application\n");
+							OpenCM_Cmd_SendCommand("AT&GO");
+						}
+						
+						break;
+					}
+					else
+					{
+						OpenCM_Wait_ms(200);
+						fseek( fp, 0, SEEK_SET );
+						expected_next = 10;
+					}
+	
+				}
+	
+	  		}
+	  		else
+	  		{
+	  			fprintf( stderr, "Fail to be ready.\n" );
+	  			break;
+	  		}
+		}
+
+	if( load_bin == 1 )
+	{
+		fclose(fp);
+	}
+	Print_Log("다운로드 성공");
+}
+
 UINT CST32LD_GUIDlg::Download_Thread(LPVOID pParam)
 {
         CST32LD_GUIDlg *Dlg = (CST32LD_GUIDlg*)pParam;
@@ -629,6 +802,18 @@ UINT CST32LD_GUIDlg::Download_Thread(LPVOID pParam)
 		Dlg->Download_Exe();
        
 		stm32_close();
+
+		Dlg->Button_Status(TRUE);
+
+        return 0;
+}
+
+
+UINT CST32LD_GUIDlg::Download_Thread_OpenCM(LPVOID pParam)
+{
+        CST32LD_GUIDlg *Dlg = (CST32LD_GUIDlg*)pParam;
+ 
+		Dlg->Download_Exe_OpenCM();      
 
 		Dlg->Button_Status(TRUE);
 
@@ -655,7 +840,18 @@ void CST32LD_GUIDlg::OnButtonDownFirm()
 
 	Button_Status(FALSE);
 
-	AfxBeginThread(Download_Thread,this);	
+	if( Get_BoardType() == BOARD_SKYROVER )
+	{
+		AfxBeginThread(Download_Thread,this);	
+	}
+	else if( Get_BoardType() == BOARD_CUPDRONE )
+	{
+		AfxBeginThread(Download_Thread_OpenCM,this);	
+	}
+	else
+	{
+		MessageBox("Wrong BoardType");
+	}
 }
 
 void CST32LD_GUIDlg::OnButtonUpdate() 
@@ -673,4 +869,19 @@ void CST32LD_GUIDlg::OnButtonWriteUnprotect()
 	Button_Status(FALSE);
 
 	AfxBeginThread(Download_Thread,this);	
+}
+
+u32 CST32LD_GUIDlg::Get_BoardType() 
+{
+	int BoardType;
+	CString str;
+
+	BoardType = m_ctrlBoard.GetCurSel();
+
+	//str.Format("%d", BoardType );
+	//MessageBox( str );
+
+	if( BoardType > 1 ) BoardType = 0;
+
+	return BoardType;
 }

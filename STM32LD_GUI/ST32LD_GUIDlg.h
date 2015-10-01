@@ -13,6 +13,7 @@
 
 #include "stm32ld.h"
 #include "serial.h"
+#include "OpenCM.h"
 
 
 #define BL_VERSION_MAJOR  2
@@ -29,6 +30,10 @@
 #define WRITE_UNPROTECT 2
 
 
+#define BOARD_SKYROVER	0
+#define BOARD_CUPDRONE	1
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CST32LD_GUIDlg dialog
@@ -42,8 +47,9 @@ public:
 
 	BOOL	UART_Opened;
 	BOOL	FILE_Opened;
-
+	
 	u32		Download_Mode;
+
 
 
 	FILE *fp;
@@ -59,16 +65,20 @@ public:
 	void Print_Log(CString str);
 	void Button_Status( BOOL Mode );
 	void Download_Exe();
+	void Download_Exe_OpenCM();
 	void dbg_printf( char *format, ... );
 	void COM_Update( void );
 	BOOL GetFileName( void );
+	u32  Get_BoardType();
 
 
 	static UINT Download_Thread(LPVOID pParam);
+	static UINT Download_Thread_OpenCM(LPVOID pParam);
 
 // Dialog Data
 	//{{AFX_DATA(CST32LD_GUIDlg)
 	enum { IDD = IDD_ST32LD_GUI_DIALOG };
+	CComboBox	m_ctrlBoard;
 	CComboBox	m_comboCOM;
 	CListCtrl	m_listLog;
 	//}}AFX_DATA

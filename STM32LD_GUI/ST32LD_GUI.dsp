@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 /nologo /subsystem:windows /machine:I386 /out:"Release/STM32LD_GUI_V0.0.4.exe"
+# ADD LINK32 /nologo /subsystem:windows /machine:I386 /out:"Release/STM32LD_GUI_V0.0.5.exe"
 
 !ELSEIF  "$(CFG)" == "ST32LD_GUI - Win32 Debug"
 
@@ -68,7 +68,7 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "./stm32ld" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "WIN32_BUILD" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x412 /d "_DEBUG"
@@ -144,33 +144,26 @@ SOURCE=.\res\ST32LD_GUI.rc2
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\stm32ld\OpenCM.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=.\stm32ld\OpenCM.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\stm32ld\serial.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\stm32ld\serial_win32.cpp
-
-!IF  "$(CFG)" == "ST32LD_GUI - Win32 Release"
-
 # SUBTRACT CPP /YX /Yc /Yu
-
-!ELSEIF  "$(CFG)" == "ST32LD_GUI - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=.\stm32ld\stm32ld.cpp
-
-!IF  "$(CFG)" == "ST32LD_GUI - Win32 Release"
-
 # SUBTRACT CPP /YX /Yc /Yu
-
-!ELSEIF  "$(CFG)" == "ST32LD_GUI - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
