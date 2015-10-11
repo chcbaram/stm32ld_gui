@@ -6,15 +6,15 @@
 --------------------Configuration: ST32LD_GUI - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSP3F49.tmp" with contents
+Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSPDDB3.tmp" with contents
 [
 /nologo /MT /W3 /GX /O2 /I "./stm32ld" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "WIN32_BUILD" /FR"Release/" /Fp"Release/ST32LD_GUI.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
 "C:\D\git\stm32ld_gui\STM32LD_GUI\ST32LD_GUIDlg.cpp"
 ]
-Creating command line "cl.exe @C:\Users\Baram\AppData\Local\Temp\RSP3F49.tmp" 
-Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSP3F4A.tmp" with contents
+Creating command line "cl.exe @C:\Users\Baram\AppData\Local\Temp\RSPDDB3.tmp" 
+Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSPDDC4.tmp" with contents
 [
-/nologo /subsystem:windows /incremental:no /pdb:"Release/STM32LD_GUI_V0.0.5.pdb" /machine:I386 /out:"Release/STM32LD_GUI_V0.0.5.exe" 
+/nologo /subsystem:windows /incremental:no /pdb:"Release/STM32LD_GUI_V0.0.6.pdb" /machine:I386 /out:"Release/STM32LD_GUI_V0.0.6.exe" 
 .\Release\ST32LD_GUI.obj
 .\Release\ST32LD_GUIDlg.obj
 .\Release\StdAfx.obj
@@ -23,7 +23,7 @@ Creating temporary file "C:\Users\Baram\AppData\Local\Temp\RSP3F4A.tmp" with con
 .\Release\stm32ld.obj
 .\Release\ST32LD_GUI.res
 ]
-Creating command line "link.exe @C:\Users\Baram\AppData\Local\Temp\RSP3F4A.tmp"
+Creating command line "link.exe @C:\Users\Baram\AppData\Local\Temp\RSPDDC4.tmp"
 <h3>Output Window</h3>
 Compiling...
 ST32LD_GUIDlg.cpp
@@ -42,7 +42,7 @@ Creating browse info file...
 
 
 <h3>Results</h3>
-STM32LD_GUI_V0.0.5.exe - 0 error(s), 7 warning(s)
+STM32LD_GUI_V0.0.6.exe - 0 error(s), 7 warning(s)
 </pre>
 </body>
 </html>

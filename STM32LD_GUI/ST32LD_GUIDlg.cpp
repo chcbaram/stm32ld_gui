@@ -135,7 +135,7 @@ BOOL CST32LD_GUIDlg::OnInitDialog()
 	FILE_Opened = FALSE;
 
 	
-	m_ctrlBoard.SetCurSel(0);
+	m_ctrlBoard.SetCurSel(1);
 
 
 	//m_comboCOM.GetCurSel();
@@ -736,7 +736,7 @@ void CST32LD_GUIDlg::Download_Exe_OpenCM()
 		return;
 	}
 
-	dbg_printf( "OpenCM_Cmd_Init : OK\n" );
+	dbg_printf( "CupDrone_Cmd_Init : OK\n" );
 
 
 		for( i=0; i<5; i++ )

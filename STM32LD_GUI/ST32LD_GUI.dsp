@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 /nologo /subsystem:windows /machine:I386 /out:"Release/STM32LD_GUI_V0.0.5.exe"
+# ADD LINK32 /nologo /subsystem:windows /machine:I386 /out:"Release/STM32LD_GUI_V0.0.6.exe"
 
 !ELSEIF  "$(CFG)" == "ST32LD_GUI - Win32 Debug"
 
